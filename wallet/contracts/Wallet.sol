@@ -15,7 +15,7 @@ contract Wallet{
     function getBalance()  external view returns(uint){
         return wallets[msg.sender];
     }
-
+ 
     receive() external payable{
         wallets[msg.sender] += msg.value;
     }
