@@ -23,6 +23,11 @@ function App() {
     setAmountSend(e.target.value);
   }
 
+  function changeAmounWithdraw(e){
+    setAmountWithdraw(e.target.value);
+
+  }
+
 
   
   async function getBalance(){
@@ -78,6 +83,35 @@ function App() {
 
 
     }
+  }
+
+  async function withdraw(){
+    if(!amountWithdraw){
+      return;
+    }
+    setError('');
+    setSuccess('');
+    const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const contract =  new ethers.Contract(WalletAddress,Wallet.abi,signer);
+
+    try {
+      const transaction =  await contract.withdrawMoney(accounts[0],ethers.utils.parseEther(amountWithdraw));
+      await transaction.wait();
+      setAmountWithdraw('');
+      getBalance();
+      setSuccess('Votre argent bien été retiré du portefeuille')
+
+
+
+      
+    } catch (error) {
+      
+    }
+
+
+
   }
  
   return (
